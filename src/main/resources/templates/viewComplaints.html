@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>View Open Complaints</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<nav>
+    <ul>
+        <li><a th:href="@{/dashboard}">Dashboard</a></li>
+        <li><a th:href="@{/login}">Login</a></li>
+        <li><a th:href="@{/complaintHistory}">Complaint History</a></li>
+    </ul>
+</nav>
+<h1>Open Complaints</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Complaint Type</th>
+        <th>Description</th>
+        <th>Registration Date & Time</th>
+        <th>Status</th>
+        <th>User ID</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="complaint : ${complaints}">
+        <td th:text="${complaint.type}"></td>
+        <td th:text="${complaint.description}"></td>
+        <td th:text="${complaint.registrationDateTime}"></td>
+        <td th:text="${complaint.status}"></td>
+        <td th:text="${complaint.userId}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

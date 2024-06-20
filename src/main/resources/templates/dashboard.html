@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<nav>
+    <ul>
+        <li><a th:href="@{/login}">Login</a></li>
+        <li><a th:href="@{/viewComplaints}">View Open Complaints</a></li>
+        <li><a th:href="@{/complaintHistory}">Complaint History</a></li>
+    </ul>
+</nav>
+<h1>Submit a Complaint</h1>
+<form th:action="@{/submitComplaint}" method="post" enctype="multipart/form-data">
+    <label for="type">Complaint Type:</label>
+    <select name="type" id="type">
+        <option value="ISAP">ISAP</option>
+        <option value="Doordrishti">Doordrishti</option>
+    </select>
+    <br>
+    <label for="description">Description:</label>
+    <textarea id="description" name="description"></textarea>
+    <br>
+    <label for="image">Upload Image:</label>
+    <input type="file" id="image" name="image">
+    <br>
+    <label for="userId">User ID:</label>
+    <input type="text" id="userId" name="userId">
+    <br>
+    <input type="submit" value="Submit">
+</form>
+<p th:text="${message}"></p>
+</body>
+</html>
