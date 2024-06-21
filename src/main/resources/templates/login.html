@@ -1,8 +1,69 @@
-<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Login</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        nav ul li {
+            display: inline;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+            padding: 10px 20px;
+            background-color: #e7e7e7;
+            border-radius: 4px;
+        }
+        nav ul li a:hover {
+            background-color: #ccc;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+        input[type="Email"], input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
 <nav>
@@ -13,7 +74,7 @@
     </ul>
 </nav>
 <h1>Login</h1>
-<form th:action="@{/login}" method="post">
+<form th:action="@{/login}" method="post" onsubmit="return validateForm()">
     <label for="Email">Email:</label>
     <input type="Email" id="Email" name="Email">
     <br>
@@ -22,5 +83,23 @@
     <br>
     <input type="submit" value="Login">
 </form>
+
+<script>
+    const registeredEmail = "user@example.com";  // Replace with actual registered email
+    const registeredPassword = "password123";  // Replace with actual registered password
+
+    function validateForm() {
+        const email = document.getElementById("Email").value;
+        const password = document.getElementById("password").value;
+
+        if (email === registeredEmail && password === registeredPassword) {
+            return true;  // Allow form submission
+        } else {
+            alert("Invalid email or password. Please try again.");
+            return false;  // Prevent form submission
+        }
+    }
+</script>
 </body>
 </html>
+
