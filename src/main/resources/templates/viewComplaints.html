@@ -2,14 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>View Open Complaints</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="src/main/resources/static/styles.css">
 </head>
 <body>
 <nav>
     <ul>
         <li><a th:href="@{/dashboard}">Dashboard</a></li>
         <li><a th:href="@{/login}">Login</a></li>
-        <li><a th:href="@{/complaintHistory}">Complaint History</a></li>
+        <li><a th:href="@{/complaintHistory(userId=${userId})}">Complaint History</a></li>
     </ul>
 </nav>
 <h1>Open Complaints</h1>
@@ -21,6 +21,7 @@
         <th>Registration Date & Time</th>
         <th>Status</th>
         <th>User ID</th>
+        <th>Image</th>
     </tr>
     </thead>
     <tbody>
@@ -30,6 +31,9 @@
         <td th:text="${complaint.registrationDateTime}"></td>
         <td th:text="${complaint.status}"></td>
         <td th:text="${complaint.userId}"></td>
+        <td>
+            <img th:src="@{'/images/' + ${complaint.imageUrl}}" alt="Complaint Image" width="100">
+        </td>
     </tr>
     </tbody>
 </table>

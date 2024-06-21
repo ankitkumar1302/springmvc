@@ -3,26 +3,35 @@ package com.example.springmvc.controller;
 import com.example.springmvc.model.Complaint;
 import com.example.springmvc.service.ComplaintService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class DashboardController {
+
     @Autowired
     private ComplaintService complaintService;
 
+    @Value("${file.upload-dir}")
+    private String uploadDir;
+
     @GetMapping("/dashboard")
-    public String showDashboard() {
-        return "dashboard";  // This resolves to the dashboard.html template
+    public String showDashboard(Model model) {
+        model.addAttribute("userId", "defaultUserId"); // Adding a default userId to avoid Thymeleaf errors
+        return "dashboard";
     }
 
     @PostMapping("/submitComplaint")
@@ -39,40 +48,49 @@ public class DashboardController {
 
         if (!image.isEmpty()) {
             try {
-                String imagePath = "/images/" + image.getOriginalFilename();
-                File file = new File("src/main/resources/static" + imagePath);
+                // Ensure the directory exists
+                Path uploadPath = Paths.get(uploadDir);
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                String imagePath = uploadPath.resolve(Objects.requireNonNull(image.getOriginalFilename())).toString();
+                File file = new File(imagePath);
                 image.transferTo(file);
-                complaint.setImageUrl(imagePath);
+
+                // Save relative path to the database
+                complaint.setImageUrl("/images/" + image.getOriginalFilename());
             } catch (IOException e) {
                 e.printStackTrace();
+                model.addAttribute("message", "Failed to upload image!");
+                return "dashboard";
             }
         }
 
         complaintService.saveComplaint(complaint);
         model.addAttribute("message", "Complaint submitted successfully!");
-        return "dashboard";  // This resolves to the dashboard.html template
+        return "redirect:/dashboard"; // Redirect to avoid form resubmission
     }
 
     @GetMapping("/viewComplaints")
     public String viewComplaints(Model model) {
         List<Complaint> openComplaints = complaintService.getOpenComplaints();
         model.addAttribute("complaints", openComplaints);
-        return "viewComplaints";  // This resolves to the viewComplaints.html template
+        return "viewComplaints";
     }
 
-    @GetMapping("/complaintHistory/{userId}")
-    public String complaintHistory(@PathVariable("userId") String userId, Model model) {
+    @GetMapping("/complaintHistory")
+    public String complaintHistory(@RequestParam("userId") String userId, Model model) {
         List<Complaint> complaints = complaintService.getComplaintHistory(userId);
         model.addAttribute("complaints", complaints);
-        return "complaintHistory";  // This resolves to the complaintHistory.html template
+        return "complaintHistory";
     }
 
     @GetMapping("/login")
     public String login() {
-        return "login";  // This resolves to the login.html template
+        return "login";
     }
 }
-
 /*
     TODO: I am not able to send the images to the database have to finish that.
     TODO: Create the conditions in the login after validation got access to the dashboard.
